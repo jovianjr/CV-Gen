@@ -1,9 +1,9 @@
 import { jsPDF } from "jspdf";
-import i18n from "~/constants/locale";
+import { generate as generateLang } from "~/constants/locale";
 
 const generateCV = ({ data = {}, lang = "id" }) => {
   let space = 20;
-  const constant = i18n[lang].pdf;
+  const constant = generateLang[lang].pdf;
 
   const doc = new jsPDF({
     orientation: "p",

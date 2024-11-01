@@ -1,5 +1,16 @@
 const i18n = {
   en: {
+    app_description: "Generate your cv ats friendly",
+    start_now: "Start Now",
+  },
+  id: {
+    app_description: "Buat CV yang ramah untuk ATS",
+    start_now: "Mulai Sekarang",
+  },
+};
+
+export const generate = {
+  en: {
     pdf: {
       summary: "SUMMARY",
       experience: "EXPERIENCE",
@@ -10,7 +21,7 @@ const i18n = {
       skillAndInterest: "SKILL AND INTEREST",
       skill: "Skill",
       interest: "Interest",
-      now: "now",
+      now: "present",
     },
     personal: {
       title: "Personal Information",
@@ -136,6 +147,56 @@ const i18n = {
     save_file: "Simpan Berkas",
     generate_cv: "Buat CV",
     delete: "Hapus",
+  },
+};
+
+export const policy = {
+  en: {
+    title: "User Policy",
+    description:
+      "This application is committed to safeguarding user data privacy. This policy provides a detailed explanation of how user data is collected, managed, used, and protected within the application environment to ensure security and user confidence.",
+    data_store: "Data Storage",
+    list: [
+      "This application does not store user data on any server database or cloud. Therefore, user personal data is inaccessible to third parties through this application.",
+      "User data will be stored locally on the user's device, utilizing the browser’s built-in storage mechanisms. Data can also be saved in a downloadable JSON file format, allowing users to retain a private copy or transfer their data to another device as needed.",
+    ],
+    note: "This approach gives users full control over their personal data, reducing the risk of data leakage by avoiding storage on external servers. In this way, the privacy and security of user information are maintained, offering users peace of mind in managing their data independently.",
+  },
+  id: {
+    title: "Kebijakan Pengguna",
+    description:
+      "Aplikasi ini berkomitmen untuk menjaga privasi data pengguna dengan sepenuh hati. Kebijakan ini memberikan penjelasan mendetail tentang bagaimana data pengguna dikumpulkan, dikelola, digunakan, dan dilindungi dalam lingkungan aplikasi ini untuk memastikan keamanan dan kenyamanan pengguna.",
+    data_store: "Penyimpanan Data",
+    list: [
+      "Aplikasi ini tidak menyimpan data pengguna di dalam basis data server atau cloud. Dengan demikian, data pribadi pengguna tidak dapat diakses oleh pihak ketiga melalui aplikasi ini.",
+      "Data pengguna akan disimpan secara lokal pada perangkat yang digunakan, yaitu melalui mekanisme penyimpanan bawaan browser. Data juga dapat disimpan dalam bentuk file JSON yang mudah diunduh dan dibagikan, memungkinkan pengguna untuk menyimpan salinan data mereka secara pribadi atau mentransfernya ke perangkat lain jika diperlukan.",
+    ],
+    note: "Pendekatan ini memberikan kontrol penuh kepada pengguna atas data pribadi mereka, mengurangi risiko kebocoran data karena tidak adanya penyimpanan data di server eksternal. Dengan demikian, privasi dan keamanan informasi pengguna tetap terjaga, serta memberikan rasa aman bagi pengguna dalam mengelola data mereka secara mandiri.",
+  },
+};
+
+export const contact = {
+  en: {
+    title: "Contact",
+    description: "You may contact me through any of the methods below",
+  },
+  id: {
+    title: "Kontak",
+    description:
+      "Anda dapat menghubungi saya melalui salah satu kontak di bawah ini",
+  },
+};
+
+export const footer = {
+  en: {
+    home: "Home",
+    policy: "User Policy",
+    contact: "Contact",
+  },
+  id: {
+    home: "Beranda",
+    policy: "Kebijakan Pengguna",
+    contact: "Kontak",
   },
 };
 

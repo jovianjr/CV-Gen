@@ -55,9 +55,7 @@ watch(
 
       const lang = props.lang ?? "en";
       const timestamp = Date.parse(newDate);
-      console.log(newDate);
       if (isNaN(timestamp)) {
-        console.log(newDate);
         if (!newDate) return;
         const monthDictionary = month[lang];
         const [monthName, year] = newDate.split(" ");
@@ -71,13 +69,7 @@ watch(
           const e = notMonthDictionary.findIndex(
             (e) => e.toLowerCase() === monthName.toLowerCase(),
           );
-          console.log("2 ", monthDictionary);
-          console.log("99 ", monthDictionary[e] + " " + year);
           model.value = monthDictionary[e] + " " + year;
-          // console.log(newDate);
-          // let [monthName, year] = newDate.split(" ");
-          // let localeMonth = monthMap[monthName] || monthName;
-          // model.value = localeMonth + year;
         }
         return;
       }

@@ -3,7 +3,7 @@ import { ref } from "vue";
 import Footer from "~/pages/Footer.vue";
 
 import { langOptions } from "~/constants/lang";
-import i18n from "~/constants/locale";
+import { generate as generateLang } from "~/constants/locale";
 import toc from "~/constants/toc";
 import Input from "~/components/Input.vue";
 import generateCV from "~/helpers/generateCV";
@@ -11,7 +11,7 @@ import generateCV from "~/helpers/generateCV";
 const activeSection = ref("section1");
 const fileInput = ref(null);
 const languageOptions = ref(langOptions);
-const language = ref(languageOptions.value[0]);
+const language = ref({});
 const locale = ref({});
 const form = ref({
   name: "",
@@ -29,13 +29,16 @@ const form = ref({
   interest: [],
 });
 
-watch(
-  language,
-  (val) => {
-    locale.value = i18n[val.code];
-  },
-  { immediate: true },
-);
+onMounted(() => {
+  const lang = localStorage.getItem("app_lang") ?? "en";
+  const findLang = langOptions.find((o) => o.code === lang);
+  language.value = findLang;
+});
+
+watch(language, (val) => {
+  localStorage.setItem("app_lang", val.code);
+  locale.value = generateLang[val.code];
+});
 
 const handleImport = () => {
   const file = event.target.files[0];
@@ -148,9 +151,7 @@ onBeforeUnmount(() => {
   <main>
     <div class="flex gap-40 bg-emerald-300 px-40 pb-40 pt-12">
       <div class="relative flex-1">
-        <div
-          class="sticky left-0 top-0 flex h-svh items-center justify-center py-10"
-        >
+        <div class="sticky left-0 top-10 flex justify-center py-10">
           <div class="w-full rounded-lg bg-black">
             <div
               class="w-full -translate-x-2 -translate-y-2 rounded-lg bg-white px-4 py-12"
@@ -192,9 +193,9 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.personal.title }}
+                    {{ locale.personal?.title }}
                   </h2>
-                  <p class="text-base">{{ locale.personal.description }}</p>
+                  <p class="text-base">{{ locale.personal?.description }}</p>
                 </div>
               </div>
               <Input
@@ -251,10 +252,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.experience.title }}
+                    {{ locale.experience?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.experience.description }}
+                    {{ locale.experience?.description }}
                   </p>
                 </div>
               </div>
@@ -321,7 +322,7 @@ onBeforeUnmount(() => {
                   @click="form.experience = [...form.experience, {}]"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.experience.title }}
+                  {{ locale.add + " " + locale.experience?.title }}
                 </button>
               </div>
             </div>
@@ -338,10 +339,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.education.title }}
+                    {{ locale.education?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.education.description }}
+                    {{ locale.education?.description }}
                   </p>
                 </div>
               </div>
@@ -411,7 +412,7 @@ onBeforeUnmount(() => {
                   @click="form.education = [...form.education, {}]"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.education.title }}
+                  {{ locale.add + " " + locale.education?.title }}
                 </button>
               </div>
             </div>
@@ -428,9 +429,9 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.project.title }}
+                    {{ locale.project?.title }}
                   </h2>
-                  <p class="text-base">{{ locale.project.description }}</p>
+                  <p class="text-base">{{ locale.project?.description }}</p>
                 </div>
               </div>
               <div
@@ -496,7 +497,7 @@ onBeforeUnmount(() => {
                   @click="form.project = [...form.project, {}]"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.project.title }}
+                  {{ locale.add + " " + locale.project?.title }}
                 </button>
               </div>
             </div>
@@ -513,10 +514,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.organization.title }}
+                    {{ locale.organization?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.organization.description }}
+                    {{ locale.organization?.description }}
                   </p>
                 </div>
               </div>
@@ -583,7 +584,7 @@ onBeforeUnmount(() => {
                   @click="form.organization = [...form.organization, {}]"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.organization.title }}
+                  {{ locale.add + " " + locale.organization?.title }}
                 </button>
               </div>
             </div>
@@ -600,10 +601,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.award.title }}
+                    {{ locale.award?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.award.description }}
+                    {{ locale.award?.description }}
                   </p>
                 </div>
               </div>
@@ -650,7 +651,7 @@ onBeforeUnmount(() => {
                   @click="form.award = [...form.award, {}]"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.award.title }}
+                  {{ locale.add + " " + locale.award?.title }}
                 </button>
               </div>
             </div>
@@ -667,10 +668,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.skill.title }}
+                    {{ locale.skill?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.skill.description }}
+                    {{ locale.skill?.description }}
                   </p>
                 </div>
               </div>
@@ -704,7 +705,7 @@ onBeforeUnmount(() => {
                   @click="form.skill = [...form.skill, '']"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.skill.title }}
+                  {{ locale.add + " " + locale.skill?.title }}
                 </button>
               </div>
             </div>
@@ -721,10 +722,10 @@ onBeforeUnmount(() => {
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
                   <h2 class="text-xl font-semibold text-emerald-500">
-                    {{ locale.interest.title }}
+                    {{ locale.interest?.title }}
                   </h2>
                   <p class="text-base">
-                    {{ locale.interest.description }}
+                    {{ locale.interest?.description }}
                   </p>
                 </div>
               </div>
@@ -758,7 +759,7 @@ onBeforeUnmount(() => {
                   @click="form.interest = [...form.interest, '']"
                   class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
-                  {{ locale.add + " " + locale.interest.title }}
+                  {{ locale.add + " " + locale.interest?.title }}
                 </button>
               </div>
             </div>
@@ -766,15 +767,6 @@ onBeforeUnmount(() => {
         </section>
 
         <section id="submit" class="mt-6 flex items-center justify-end gap-x-6">
-          <!-- <div class="rounded-lg bg-black">
-            <button
-              type="button"
-              @click="console.log(form)"
-              class="-translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 transition-all hover:translate-x-0 hover:translate-y-0"
-            >
-              {{ locale.cancel }}
-            </button>
-          </div> -->
           <div class="rounded-lg bg-black">
             <button
               type="button"
@@ -796,5 +788,5 @@ onBeforeUnmount(() => {
       </form>
     </div>
   </main>
-  <Footer />
+  <Footer :lang="language.code" />
 </template>

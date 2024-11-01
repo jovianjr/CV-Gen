@@ -1,9 +1,30 @@
 <script setup>
 import { ref } from "vue";
 import Footer from "~/pages/Footer.vue";
+import { policy as policyLang } from "~/constants/locale";
 import { langOptions } from "~/constants/lang";
 const languageOptions = ref(langOptions);
-const language = ref(languageOptions.value[0]);
+const language = ref({});
+const locale = ref({});
+const breadcrumbHome = ref({
+  icon: "pi pi-home",
+  route: "/",
+});
+const breadcrumbItems = {
+  en: [{ label: "User Policy" }],
+  id: [{ label: "Kebijakan Pengguna" }],
+};
+
+onMounted(() => {
+  const lang = localStorage.getItem("app_lang") ?? "en";
+  const findLang = langOptions.find((o) => o.code === lang);
+  language.value = findLang;
+});
+
+watch(language, (val) => {
+  localStorage.setItem("app_lang", val.code);
+  locale.value = policyLang[val.code];
+});
 </script>
 
 <template>
@@ -48,27 +69,50 @@ const language = ref(languageOptions.value[0]);
     </nav>
 
     <div class="flex w-[60svw] flex-col gap-4 py-20 leading-8">
-      <h1 class="text-3xl font-bold text-emerald-500">Kebijakan pengguna</h1>
-      <p>
-        Aplikasi ini berkomitmen untuk menjaga privasi data pengguna dengan
-        baik. Kebijakan ini merinci bagaimana data dikumpulkan, digunakan, dan
-        dilindungi dalam aplikasi ini.
+      <Breadcrumb
+        :home="breadcrumbHome"
+        :model="breadcrumbItems[language.code]"
+        class="font-semibold"
+      >
+        <template #item="{ item, props }">
+          <router-link
+            v-if="item.route"
+            v-slot="{ href, navigate }"
+            :to="item.route"
+            custom
+          >
+            <a :href="href" v-bind="props.action" @click="navigate">
+              <span :class="[item.icon, 'text-color']" />
+              <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+          </router-link>
+          <a
+            v-else
+            :href="item.url"
+            :target="item.target"
+            v-bind="props.action"
+          >
+            <span class="text-surface-700 dark:text-surface-0">{{
+              item.label
+            }}</span>
+          </a>
+        </template>
+      </Breadcrumb>
+      <h1 class="text-3xl font-bold text-emerald-500">{{ locale.title }}</h1>
+      <p class="text-justify">
+        {{ locale.description }}
       </p>
 
-      <h2 class="mt-2 text-xl font-semibold">Penyimpanan Data</h2>
+      <h2 class="mt-2 text-xl font-semibold">{{ locale.data_store }}</h2>
       <ul class="list-disc pl-10 text-justify leading-8">
-        <li>Aplikasi ini tidak menyimpan data pengguna pada database.</li>
-        <li>
-          Data akan disimpan secara lokal pada perangkat pengguna melalui
-          penyimpanan browser dan dalam bentuk file JSON yang dapat diunduh.
+        <li v-for="(item, itemIdx) in locale.list" :key="itemIdx">
+          {{ item }}
         </li>
       </ul>
-      <p>
-        Dengan pendekatan ini, pengguna memiliki kendali penuh atas data mereka,
-        sehingga keamanan dan privasi informasi tetap terjaga tanpa melibatkan
-        penyimpanan di server eksternal.
+      <p class="text-justify">
+        {{ locale.note }}
       </p>
     </div>
   </main>
-  <Footer />
+  <Footer :lang="language.code" />
 </template>

@@ -1,9 +1,30 @@
 <script setup>
 import { ref } from "vue";
 import Footer from "~/pages/Footer.vue";
+import { contact as contactLang } from "~/constants/locale";
 import { langOptions } from "~/constants/lang";
 const languageOptions = ref(langOptions);
-const language = ref(languageOptions.value[0]);
+const language = ref({});
+const locale = ref({});
+const breadcrumbHome = ref({
+  icon: "pi pi-home",
+  route: "/",
+});
+const breadcrumbItems = {
+  en: [{ label: "Contact" }],
+  id: [{ label: "Kontrak" }],
+};
+
+onMounted(() => {
+  const lang = localStorage.getItem("app_lang") ?? "en";
+  const findLang = langOptions.find((o) => o.code === lang);
+  language.value = findLang;
+});
+
+watch(language, (val) => {
+  localStorage.setItem("app_lang", val.code);
+  locale.value = contactLang[val.code];
+});
 </script>
 
 <template>
@@ -48,8 +69,37 @@ const language = ref(languageOptions.value[0]);
     </nav>
 
     <div class="flex w-[60svw] flex-col gap-4 py-20">
-      <h1 class="text-3xl font-bold text-emerald-500">Kontak</h1>
-      <p>Anda dapat menghubungi saya melalui salah satu kontak di bawah ini</p>
+      <Breadcrumb
+        :home="breadcrumbHome"
+        :model="breadcrumbItems[language.code]"
+        class="font-semibold"
+      >
+        <template #item="{ item, props }">
+          <router-link
+            v-if="item.route"
+            v-slot="{ href, navigate }"
+            :to="item.route"
+            custom
+          >
+            <a :href="href" v-bind="props.action" @click="navigate">
+              <span :class="[item.icon, 'text-color']" />
+              <span class="text-primary font-semibold">{{ item.label }}</span>
+            </a>
+          </router-link>
+          <a
+            v-else
+            :href="item.url"
+            :target="item.target"
+            v-bind="props.action"
+          >
+            <span class="text-surface-700 dark:text-surface-0">{{
+              item.label
+            }}</span>
+          </a>
+        </template>
+      </Breadcrumb>
+      <h1 class="text-3xl font-bold text-emerald-500">{{ locale.title }}</h1>
+      <p>{{ locale.description }}</p>
       <div class="mt-4 flex flex-col gap-6">
         <a
           class="flex cursor-pointer items-center gap-4 pl-4 text-xl font-medium hover:text-emerald-500"
@@ -84,5 +134,5 @@ const language = ref(languageOptions.value[0]);
       </div>
     </div>
   </main>
-  <Footer />
+  <Footer :lang="language.code" />
 </template>
