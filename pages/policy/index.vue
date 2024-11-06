@@ -30,10 +30,10 @@ watch(language, (val) => {
 <template>
   <main class="flex min-h-svh w-full flex-col items-center">
     <nav
-      class="flex h-20 w-full items-center justify-between border-b-4 border-black bg-white px-10 py-6"
+      class="flex h-10 w-full items-center justify-between border-b-4 border-black bg-white px-6 py-6 md:h-20 md:px-10"
     >
       <NuxtLink to="/">
-        <h1 class="text-2xl font-semibold">
+        <h1 class="text-lg font-semibold md:text-2xl">
           <span class="font-bold text-emerald-500">CV</span>Gen
         </h1>
       </NuxtLink>
@@ -44,10 +44,10 @@ watch(language, (val) => {
             :options="languageOptions"
             optionLabel="name"
             placeholder="Select a City"
-            class="-all !h-12 w-40 -translate-x-0.5 -translate-y-0.5 !border-2 !border-emerald-500 text-base font-medium hover:translate-x-0 hover:translate-y-0"
+            class="!h-8 w-40 -translate-x-0.5 -translate-y-0.5 !border-2 !border-emerald-500 text-sm font-medium !transition-all hover:translate-x-0 hover:translate-y-0 md:!h-12 md:text-base"
           >
             <template #option="slotProps">
-              <div class="flex items-center font-medium">
+              <div class="flex items-center text-sm font-medium md:text-base">
                 <div>{{ slotProps.option.name }}</div>
               </div>
             </template>
@@ -68,11 +68,11 @@ watch(language, (val) => {
       </div>
     </nav>
 
-    <div class="flex w-[60svw] flex-col gap-4 py-20 leading-8">
+    <div class="flex w-[75svw] flex-col gap-4 py-20 leading-8 md:w-[60svw]">
       <Breadcrumb
         :home="breadcrumbHome"
         :model="breadcrumbItems[language.code]"
-        class="font-semibold"
+        class="text-sm font-semibold md:text-base"
       >
         <template #item="{ item, props }">
           <router-link
@@ -98,18 +98,22 @@ watch(language, (val) => {
           </a>
         </template>
       </Breadcrumb>
-      <h1 class="text-3xl font-bold text-emerald-500">{{ locale.title }}</h1>
-      <p class="text-justify">
+      <h1 class="text-2xl font-bold text-emerald-500 md:text-3xl">
+        {{ locale.title }}
+      </h1>
+      <p class="text-justify text-sm md:text-base">
         {{ locale.description }}
       </p>
 
-      <h2 class="mt-2 text-xl font-semibold">{{ locale.data_store }}</h2>
-      <ul class="list-disc pl-10 text-justify leading-8">
+      <h2 class="mt-2 text-lg font-semibold md:text-xl">
+        {{ locale.data_store }}
+      </h2>
+      <ul class="list-disc pl-10 text-justify text-sm leading-8 md:text-base">
         <li v-for="(item, itemIdx) in locale.list" :key="itemIdx">
           {{ item }}
         </li>
       </ul>
-      <p class="text-justify">
+      <p class="text-justify text-sm md:text-base">
         {{ locale.note }}
       </p>
     </div>

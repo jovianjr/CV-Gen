@@ -13,9 +13,9 @@ watch(
 
 <template>
   <footer class="w-full font-medium text-white">
-    <div class="h-1 w-full bg-black"></div>
+    <div class="h-0.5 w-full bg-black md:h-1"></div>
     <div
-      class="flex w-full items-center justify-center gap-10 bg-white px-20 pb-16 pt-20 font-medium text-emerald-700"
+      class="flex w-full items-center justify-center gap-6 bg-white px-20 pb-8 pt-10 text-sm font-medium text-emerald-700 md:gap-10 md:pb-16 md:pt-20 md:text-base"
     >
       <NuxtLink to="/">
         <span class="cursor-pointer hover:underline">{{ locale.home }}</span>

@@ -11,21 +11,23 @@ onMounted(() => {
 
 <template>
   <main class="flex h-full min-h-svh w-full flex-col gap-10 px-16 py-20">
-    <div class="flex flex-grow gap-4">
-      <div class="w-full flex-1 rounded-lg border border-black bg-black">
-        <div
-          class="flex h-full w-full -translate-x-1 -translate-y-1 items-center justify-center rounded-lg border-2 border-black bg-white p-2"
-        >
-          <img src="/assets/images/preview.png" alt="app preview" />
+    <div class="flex flex-grow flex-col gap-4 md:flex-row">
+      <div class="flex w-full flex-1">
+        <div class="h-full w-full rounded-lg border border-black bg-black">
+          <div
+            class="flex h-full w-full -translate-x-1 -translate-y-1 items-center justify-center rounded-lg border-2 border-black bg-white p-2"
+          >
+            <img src="/assets/images/preview.png" alt="app preview" />
+          </div>
         </div>
       </div>
       <div class="flex flex-1 items-center justify-center">
         <div class="flex flex-col items-center justify-center gap-4">
           <div class="flex flex-col items-center gap-2">
-            <h1 class="text-4xl font-bold">
+            <h1 class="text-2xl font-bold md:text-4xl">
               <span class="font-extrabold text-emerald-500">CV</span> Generator
             </h1>
-            <p>{{ locale.app_description }}</p>
+            <p class="text-sm md:text-base">{{ locale.app_description }}</p>
           </div>
           <div class="rounded-lg bg-black">
             <NuxtLink to="/generate">

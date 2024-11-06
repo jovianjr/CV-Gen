@@ -95,7 +95,7 @@ watch(
     <label
       v-if="props.label"
       :for="props.name"
-      class="text-base font-medium text-slate-900"
+      class="text-sm font-medium text-slate-900 md:text-base"
     >
       {{ props.label }}
     </label>

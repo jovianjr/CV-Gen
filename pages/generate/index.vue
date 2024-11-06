@@ -28,6 +28,7 @@ const form = ref({
   skill: [],
   interest: [],
 });
+const showSidebar = ref(false);
 
 onMounted(() => {
   const lang = localStorage.getItem("app_lang") ?? "en";
@@ -91,14 +92,18 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleTocScroll);
 });
+
+const toggleShowSidebar = () => {
+  showSidebar.value = !showSidebar.value;
+};
 </script>
 
 <template>
   <nav
-    class="flex h-20 items-center justify-between border-b-4 border-black bg-white px-10 py-6"
+    class="flex h-10 w-full items-center justify-between border-b-4 border-black bg-white px-6 py-6 md:h-20 md:px-10"
   >
     <NuxtLink to="/">
-      <h1 class="text-2xl font-semibold">
+      <h1 class="text-lg font-semibold md:text-2xl">
         <span class="font-bold text-emerald-500">CV</span>Gen
       </h1>
     </NuxtLink>
@@ -114,7 +119,7 @@ onBeforeUnmount(() => {
 
         <Button
           @click="fileInput.click()"
-          class="!h-12 -translate-x-0.5 -translate-y-0.5 !rounded-md !border-2 !border-emerald-500 !bg-white font-medium !text-emerald-500 !transition-all hover:translate-x-0 hover:translate-y-0"
+          class="!h-8 -translate-x-0.5 -translate-y-0.5 !rounded-md !border-2 !border-emerald-500 !bg-white text-sm font-medium !text-emerald-500 !transition-all hover:translate-x-0 hover:translate-y-0 md:!h-12 md:text-base"
         >
           Import
         </Button>
@@ -125,10 +130,10 @@ onBeforeUnmount(() => {
           :options="languageOptions"
           optionLabel="name"
           placeholder="Select a City"
-          class="-all !h-12 w-40 -translate-x-0.5 -translate-y-0.5 !border-2 !border-emerald-500 text-base font-medium hover:translate-x-0 hover:translate-y-0"
+          class="!h-8 w-40 -translate-x-0.5 -translate-y-0.5 !border-2 !border-emerald-500 text-sm font-medium !transition-all hover:translate-x-0 hover:translate-y-0 md:!h-12 md:text-base"
         >
           <template #option="slotProps">
-            <div class="flex items-center font-medium">
+            <div class="flex items-center text-sm font-medium md:text-base">
               <div>{{ slotProps.option.name }}</div>
             </div>
           </template>
@@ -149,35 +154,52 @@ onBeforeUnmount(() => {
     </div>
   </nav>
   <main>
-    <div class="flex gap-40 bg-emerald-300 px-40 pb-40 pt-12">
-      <div class="relative flex-1">
-        <div class="sticky left-0 top-10 flex justify-center py-10">
-          <div class="w-full rounded-lg bg-black">
-            <div
-              class="w-full -translate-x-2 -translate-y-2 rounded-lg bg-white px-4 py-12"
-            >
-              <ul class="flex flex-col gap-5 font-semibold">
-                <li
-                  :class="
-                    activeSection === content.id
-                      ? 'bg-emerald-400 text-white'
-                      : 'hover:border-emerald-400 hover:bg-emerald-100 hover:text-black'
-                  "
-                  class="w-full rounded-lg border hover:cursor-pointer"
-                  v-for="(content, contentIdx) in toc"
-                  :key="'toc_' + language.code + '_' + contentIdx"
-                >
-                  <a :href="'#' + content.id" class="block w-full px-6 py-3">
-                    {{ contentIdx + 1 }}.
-                    {{
-                      language.code === "id"
-                        ? content.title_id
-                        : content.title_en
-                    }}
-                  </a>
-                </li>
-              </ul>
+    <div
+      class="relative flex flex-col bg-emerald-300 px-10 pb-20 pt-4 md:flex-row md:gap-20 md:px-40 md:pb-40 md:pt-12"
+    >
+      <div class="!fixed bottom-0 left-0 z-10 p-2 md:hidden">
+        <Button @click="toggleShowSidebar">
+          <li class="pi pi-bookmark"></li>
+        </Button>
+      </div>
+      <div
+        class="fixed left-0 top-0 z-10 flex h-full max-h-screen w-full justify-center overflow-auto bg-white md:sticky md:!block md:w-fit md:overflow-visible md:bg-transparent md:py-10"
+        :class="showSidebar ? 'block' : 'hidden'"
+      >
+        <div class="w-full rounded-lg bg-white md:bg-black">
+          <div
+            class="h-full min-h-[90svh] w-full -translate-x-2 -translate-y-2 rounded-lg bg-white px-4 py-12"
+          >
+            <div class="mb-8 flex justify-end text-lg md:hidden">
+              <button
+                class="pi pi-times cursor-pointer rounded-full p-2 hover:bg-black hover:text-white"
+                @click="toggleShowSidebar"
+              ></button>
             </div>
+            <ul class="flex flex-col gap-5 font-semibold">
+              <li
+                :class="
+                  activeSection === content.id
+                    ? 'bg-emerald-400 text-white'
+                    : 'hover:border-emerald-400 hover:bg-emerald-100 hover:text-black'
+                "
+                class="w-full rounded-lg border hover:cursor-pointer"
+                v-for="(content, contentIdx) in toc"
+                :key="'toc_' + language.code + '_' + contentIdx"
+              >
+                <a
+                  :href="'#' + content.id"
+                  class="block w-full px-6 py-3"
+                  @click="toggleShowSidebar"
+                >
+                  {{ contentIdx + 1 }}.
+                  {{
+                    language.code === "id" ? content.title_id : content.title_en
+                  }}
+                </a>
+              </li>
+            </ul>
+            <div class="h-20 md:hidden"></div>
           </div>
         </div>
       </div>
@@ -192,10 +214,12 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.personal?.title }}
                   </h2>
-                  <p class="text-base">{{ locale.personal?.description }}</p>
+                  <p class="text-sm md:text-base">
+                    {{ locale.personal?.description }}
+                  </p>
                 </div>
               </div>
               <Input
@@ -251,7 +275,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.experience?.title }}
                   </h2>
                   <p class="text-base">
@@ -320,7 +344,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   @click="form.experience = [...form.experience, {}]"
-                  class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
+                  class="md:text-base-translate-x-1 w-full -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 text-sm font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
                   {{ locale.add + " " + locale.experience?.title }}
                 </button>
@@ -338,7 +362,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.education?.title }}
                   </h2>
                   <p class="text-base">
@@ -410,7 +434,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   @click="form.education = [...form.education, {}]"
-                  class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
+                  class="md:text-base-translate-x-1 w-full -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 text-sm font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
                   {{ locale.add + " " + locale.education?.title }}
                 </button>
@@ -428,10 +452,12 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.project?.title }}
                   </h2>
-                  <p class="text-base">{{ locale.project?.description }}</p>
+                  <p class="text-sm md:text-base">
+                    {{ locale.project?.description }}
+                  </p>
                 </div>
               </div>
               <div
@@ -495,7 +521,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   @click="form.project = [...form.project, {}]"
-                  class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
+                  class="md:text-base-translate-x-1 w-full -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 text-sm font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
                   {{ locale.add + " " + locale.project?.title }}
                 </button>
@@ -513,7 +539,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.organization?.title }}
                   </h2>
                   <p class="text-base">
@@ -582,7 +608,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   @click="form.organization = [...form.organization, {}]"
-                  class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
+                  class="md:text-base-translate-x-1 w-full -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 text-sm font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
                   {{ locale.add + " " + locale.organization?.title }}
                 </button>
@@ -600,7 +626,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.award?.title }}
                   </h2>
                   <p class="text-base">
@@ -649,7 +675,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   @click="form.award = [...form.award, {}]"
-                  class="w-full -translate-x-1 -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 font-medium transition-all hover:translate-x-0 hover:translate-y-0"
+                  class="md:text-base-translate-x-1 w-full -translate-y-1 rounded-lg border-2 border-black bg-white px-4 py-3 text-sm font-medium transition-all hover:translate-x-0 hover:translate-y-0"
                 >
                   {{ locale.add + " " + locale.award?.title }}
                 </button>
@@ -667,7 +693,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.skill?.title }}
                   </h2>
                   <p class="text-base">
@@ -721,7 +747,7 @@ onBeforeUnmount(() => {
             >
               <div class="relative">
                 <div class="sticky left-0 top-0 flex flex-col gap-2">
-                  <h2 class="text-xl font-semibold text-emerald-500">
+                  <h2 class="text-lg font-semibold text-emerald-500 md:text-xl">
                     {{ locale.interest?.title }}
                   </h2>
                   <p class="text-base">
